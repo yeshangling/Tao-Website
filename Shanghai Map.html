@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>我的旅游指南 - 上海</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+            font-size: 32px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        header {
+            background: #db3d44;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #f4f4f4 3px solid;
+        }
+
+        header h1 {
+            padding: 5px 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        /* 主选项卡样式 */
+        #main-tabs {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        /* 子选项卡样式 */
+        .sub-tabs {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .tab-button {
+            background-color: #db3d44;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 24px;
+        }
+
+        .tab-button:hover {
+            background-color: #a32a2f;
+        }
+
+        .main-tab-content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .sub-tab-content {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .map-container {
+            height: 1500px;
+            width: 100%;
+        }
+    </style>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9GLLob8SZbGVkL2yUwQFj2qdZNY2aY54&callback=initMap">
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>我们的旅游指南</h1>
+        </div>
+    </header>
+
+    <div class="container content">
+        <!-- 主要分栏：城市 -->
+        <div id="main-tabs">
+            <button class="tab-button" onclick="showMainContent('shanghai')">上海篇</button>
+            <button class="tab-button" onclick="showMainContent('nanjing')">南京篇</button>
+            <button class="tab-button" onclick="showMainContent('more')">未完待续</button>
+        </div>
+
+        <!-- 上海篇内容 -->
+        <div id="shanghai" class="main-tab-content">
+            <div class="sub-tabs">
+                <button class="tab-button" onclick="showSubContent('shanghai', 'food')">美食</button>
+                <button class="tab-button" onclick="showSubContent('shanghai', 'dessert')">甜品</button>
+                <button class="tab-button" onclick="showSubContent('shanghai', 'shopping')">逛街</button>
+            </div>
+            <div id="shanghai-food" class="sub-tab-content">
+                <p>我们想吃的...</p>
+                <div id="mainMap" class="map-container"></div>
+            </div>
+            <div id="shanghai-dessert" class="sub-tab-content">
+                <p>苦难的生活需要糖分！</p>
+                <div id="dessertMap" class="map-container"></div>
+            </div>
+            <div id="shanghai-shopping" class="sub-tab-content">
+                <p>逛吃逛吃逛吃...</p>
+                <div id="shoppingMap" class="map-container"></div>
+            </div>
+        </div>
+
+        <!-- 南京篇内容 -->
+        <div id="nanjing" class="main-tab-content">
+            <!-- 南京篇的子标签内容 -->
+        </div>
+
+        <!-- 未完待续内容 -->
+        <div id="more" class="main-tab-content">
+            <!-- 未完待续的内容 -->
+        </div>
+    </div>
+
+    <script>
+            function showMainContent(city) {
+                var mainTabs = document.getElementsByClassName('main-tab-content');
+                for (var i = 0; i < mainTabs.length; i++) {
+                    mainTabs[i].style.display = 'none';
+                }
+                document.getElementById(city).style.display = 'block';
+            }
+
+            function showSubContent(city, category) {
+                var subTabs = document.querySelectorAll('#' + city + ' .sub-tab-content');
+                subTabs.forEach(function(tab) {
+                    tab.style.display = 'none';
+                });
+                document.getElementById(city + '-' + category).style.display = 'block';
+            }
+    
+        function initMainMap() {
+            var shanghai = { lat: 31.2304, lng: 121.4737 };
+            var map = new google.maps.Map(document.getElementById('mainMap'), {
+                zoom: 14,
+                center: shanghai
+            });
+
+            var redIcon = 'https://i.imgur.com/nxzWfUG.png';   // 美食
+            var blueIcon = 'https://i.imgur.com/Bn7Qnv8.png'; // 酒店
+
+            var locations = [ 
+                { 
+                    lat: 31.22733907537049, 
+                    lng: 121.5174316320393, 
+                    info: "青鹤谷（浦东店）-韩餐", 
+                    imgs: ["https://i.imgur.com/OufkMgB.png", "https://i.imgur.com/zg9Wc1G.png"],
+                    address: "张杨路588号光年汇403单元",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.225174779910123, 
+                    lng: 121.44234858022672, 
+                    info: "蟹上黄-蟹黄面", 
+                    imgs: ["https://i.imgur.com/MfqHlEc.jpg", "https://i.imgur.com/BL28GUE.jpg"],
+                    address: "万航渡路121号",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.2017949991785,  
+                    lng: 121.45814514462221, 
+                    info: "人和馆-上海老味道，本帮菜", 
+                    imgs: ["https://i.imgur.com/TaEsixw.jpg", "https://i.imgur.com/AJgn7gM.jpg"],
+                    address: "肇嘉浜路407号",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.192469815732807, 
+                    lng: 121.44373145703497, 
+                    info: "锦荟·围炉小聚-打边炉", 
+                    imgs: ["https://i.imgur.com/A8Fpx3u.jpg", "https://i.imgur.com/cZiWotD.jpg"],
+                    address: "辛耕路109号一楼",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.224140520644905,  
+                    lng: 121.44618269707485, 
+                    info: "肉肉大米(静安久光店)-迷你铁板", 
+                    imgs: ["https://i.imgur.com/cMnXTqc.jpg", "https://i.imgur.com/HGjWsVm.jpg"],
+                    address: "南京西路1618号久光百货",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.243971799654073,  
+                    lng: 121.47160050046037, 
+                    info: "四季民福烤鸭店", 
+                    imgs: ["https://i.imgur.com/OpSUgC3.jpg", "https://i.imgur.com/CDG95cT.jpg"],
+                    address: "西藏北路198号静安大悦城北座 F5层",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.24412020128371,   
+                    lng: 121.52129223718602, 
+                    info: "HARMONY BEEF 1881哈墨尼牛扒坊", 
+                    imgs: ["https://i.imgur.com/StDddMq.jpg", "https://i.imgur.com/xrQ6eK0.jpg"],
+                    address: "滨江大道1777号船厂1862-101",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.2298804546862,
+                    lng: 121.46304804695889,
+                    info: "镛舍酒店", 
+                    imgs: ["https://i.imgur.com/sYJff9R.jpg"],
+                    address: "上海市黄浦区淮海中路333号",
+                    icon: blueIcon  // 第二个位置使用蓝色标记
+                },
+                // 其他地点...
+            ];
+            
+            var currentInfowindow = null; // 用于跟踪当前打开的信息窗口
+
+            locations.forEach(function(location) {
+                var marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    icon: location.icon  // 使用指定的图标
+                });
+
+                var contentString = '<div style="font-size: 20px;"><h4>' + location.info + '</h4>';
+
+                location.imgs.forEach(function(img) {
+                    contentString += '<img src="' + img + '" alt="地点图片" style="width:300px;">';
+                });
+
+                contentString += '<p>' + location.address + '</p></div>';
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                marker.addListener('click', function() {
+                    // 如果点击的是已经打开的信息窗口，则关闭它
+                    if (currentInfowindow === infowindow) {
+                        infowindow.close();
+                        currentInfowindow = null;
+                    } else {
+                        // 关闭当前打开的信息窗口（如果有）并打开新的信息窗口
+                        if (currentInfowindow) {
+                            currentInfowindow.close();
+                        }
+                        infowindow.open(map, marker);
+                        currentInfowindow = infowindow;
+                    }
+                });
+            });
+        }
+        function initDessertMap() {
+            var dessertCenter = { lat: 31.2304, lng: 121.4737 }; // 替换为甜品地图的中心点坐标
+            var map = new google.maps.Map(document.getElementById('dessertMap'), {
+                zoom: 14,
+                center: dessertCenter
+            });
+
+            var redIcon = 'https://i.imgur.com/nxzWfUG.png';   // 甜品
+            var blueIcon = 'https://i.imgur.com/Bn7Qnv8.png'; // 酒店
+
+            var dessertLocations = [
+                { 
+                    lat: 31.219587652955642, 
+                    lng: 121.46362846363516,
+                    info: "米仓POP-舒芙蕾，豆乳丸子", 
+                    imgs: ["https://i.imgur.com/GDBYkKD.png", "https://i.imgur.com/GGyQACI.png"],
+                    address: "黄浦区瑞金一路136号",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.215546939488856, 
+                    lng: 121.45818915517044,
+                    info: "La Repete-上海NO.1千层蛋糕", 
+                    imgs: ["https://i.imgur.com/g5bTodn.jpg", "https://i.imgur.com/Ct82ClC.jpg"],
+                    address: "徐汇区淮海中路999号 LG2",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.22190439950501, 
+                    lng: 121.43868114283238,
+                    info: "BAs d BAN-松露芝士火腿，巧克力可颂", 
+                    imgs: ["https://i.imgur.com/QDAXCMo.png", "https://i.imgur.com/BzHzPfa.png"],
+                    address: "静安区愚园路546号",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.211616606471534,  
+                    lng: 121.47605938852527,
+                    info: "艮上-舒芙蕾松饼", 
+                    imgs: ["https://i.imgur.com/5P85Rpa.jpg"],
+                    address: "黄浦区黄陂南路838弄中海环宇荟F1",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.23230304001711, 
+                    lng: 121.47631112776982,
+                    info: "廣蓮申-超級點心倉", 
+                    imgs: ["https://i.imgur.com/NhBcHX0.jpg", "https://i.imgur.com/XcdQygP.jpg"],
+                    address: "西藏中路268号B1-01B" ,
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.224643041212477,  
+                    lng: 121.45022109117885,
+                    info: "CHARLIETOWN红茶公司", 
+                    imgs: ["https://i.imgur.com/uLhVhdf.jpg", "https://i.imgur.com/abcoC5c.jpg"],
+                    address: "南京西路1515号静安嘉里中心南区B2层",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.225567856529757,
+                    lng: 121.44681148920799,
+                    info: "躲茶山", 
+                    imgs: ["https://i.imgur.com/cjU7TAN.jpg", "https://i.imgur.com/7iDM8sN.jpg"],
+                    address: "铜仁路88号",
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.2298804546862,
+                    lng: 121.46304804695889,
+                    info: "镛舍酒店", 
+                    imgs: ["https://i.imgur.com/sYJff9R.jpg"],
+                    address: "上海市黄浦区淮海中路333号",
+                    icon: blueIcon  // 第二个位置使用YELLOW标记
+                },
+            ];
+            
+            var currentInfowindow = null; // 用于跟踪当前打开的信息窗口
+
+            dessertLocations.forEach(function(location) {
+                var marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    icon: location.icon // 使用指定的图标
+                });
+
+                var contentString = '<div style="font-size: 20px;"><h4>' + location.info + '</h4>';
+
+                location.imgs.forEach(function(img) {
+                    contentString += '<img src="' + img + '" alt="甜品图片" style="width:300px;">';
+                });
+
+                contentString += '<p>' + location.address + '</p></div>';
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                marker.addListener('click', function() {
+                    // 如果点击的是已经打开的信息窗口，则关闭它
+                    if (currentInfowindow === infowindow) {
+                        infowindow.close();
+                        currentInfowindow = null;
+                    } else {
+                        // 关闭当前打开的信息窗口（如果有）并打开新的信息窗口
+                        if (currentInfowindow) {
+                            currentInfowindow.close();
+                        }
+                        infowindow.open(map, marker);
+                        currentInfowindow = infowindow;
+                    }
+                });
+            });
+        }
+
+
+        function initShoppingMap() {
+            var shoppingCenter = { lat: 31.2304, lng: 121.4737 }; // 替换为逛街地图的中心点坐标
+            var map = new google.maps.Map(document.getElementById('shoppingMap'), {
+                zoom: 14,
+                center: shoppingCenter
+            });
+            
+            var redIcon = 'https://i.imgur.com/nxzWfUG.png';   // 购物
+            var blueIcon = 'https://i.imgur.com/Bn7Qnv8.png'; // 酒店
+            var greenIcon = 'https://i.imgur.com/k7zIzM5.png'; // 展览
+
+            var shoppingLocations = [
+                { 
+                    lat: 31.222756739399394,
+                    lng: 121.47432733521816,
+                    info: "lelabo上海线下店 新天地", 
+                    imgs: ["https://i.imgur.com/pasv2qZ.png", "https://i.imgur.com/NQvHOwk.png"],
+                    address: "上海市黄浦区淮海中路333号" ,
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.220578955400835, 
+                    lng: 121.46890951220412,
+                    info: "TX淮海-CITY WALK", 
+                    imgs: ["https://i.imgur.com/iTha58n.jpg", "https://i.imgur.com/exDg7uO.jpg"],
+                    address: "淮海中路523号" ,
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.23824176607834, 
+                    lng: 121.4996233044868,
+                    info: "迪士尼中国旗舰店-噗噗！！！！！！", 
+                    imgs: ["https://i.imgur.com/XyHBLIE.png"],
+                    address: "丰和路180号" ,
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.212095822220604, 
+                    lng: 121.44635447614147,
+                    info: "Tagi. 塔皮屋-稀奇古怪", 
+                    imgs: ["https://i.imgur.com/ijLTC6h.jpg"],
+                    address: "乌鲁木齐中路247-5-临" ,
+                    icon: redIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.20121134802925, 
+                    lng: 121.4985305875138,
+                    info: "上海当代艺术博物馆-“cosmos cinema（宇宙电影）", 
+                    imgs: ["https://i.imgur.com/id2CWuC.jpg", "https://i.imgur.com/I90gt48.jpg"],
+                    address: "上海当代艺术博物馆" ,
+                    icon: greenIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.233543201398593, 
+                    lng: 121.50608799475694,
+                    info: "上海中心大厦-中国最高楼", 
+                    imgs: ["https://i.imgur.com/u3InqSF.jpg"],
+                    address: "陆家嘴环路479号" ,
+                    icon: greenIcon  // 第一个位置使用红色标记
+                },
+                { 
+                    lat: 31.2298804546862,
+                    lng: 121.46304804695889,
+                    info: "镛舍酒店", 
+                    imgs: ["https://i.imgur.com/sYJff9R.jpg"],
+                    address: "上海市黄浦区淮海中路333号",
+                    icon: blueIcon  // 第二个位置使用YELLOW标记
+                },
+                // 可以添加更多逛街地点...
+            ];
+            
+            var currentInfowindow = null; // 用于跟踪当前打开的信息窗口
+
+            shoppingLocations.forEach(function(location) {
+                var marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    icon: location.icon // 使用指定的图标
+                });
+
+                var contentString = '<div style="font-size: 20px;"><h4>' + location.info + '</h4>';
+
+                location.imgs.forEach(function(img) {
+                    contentString += '<img src="' + img + '" alt="逛街图片" style="width:300px;">';
+                });
+
+                contentString += '<p>' + location.address + '</p></div>';
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                marker.addListener('click', function() {
+                    // 如果点击的是已经打开的信息窗口，则关闭它
+                    if (currentInfowindow === infowindow) {
+                        infowindow.close();
+                        currentInfowindow = null;
+                    } else {
+                        // 关闭当前打开的信息窗口（如果有）并打开新的信息窗口
+                        if (currentInfowindow) {
+                            currentInfowindow.close();
+                        }
+                        infowindow.open(map, marker);
+                        currentInfowindow = infowindow;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showMainContent('shanghai'); // 默认显示上海篇
+            showSubContent('shanghai', 'food'); // 默认显示上海的美食篇
+        });
+
+        function initMap() {
+            initMainMap();  // 初始化原来的地图
+            initDessertMap();
+            initShoppingMap();
+        }
+    </script>
+
+    <script async defer
+     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9GLLob8SZbGVkL2yUwQFj2qdZNY2aY54&callback=initMap">
+    </script>
+</body>
+</html>
